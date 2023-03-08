@@ -1,30 +1,16 @@
-class Producto {
-    constructor(id, nombre, precio, img){
-        this.id = id;
-        this.nombre = nombre; 
-        this.precio = precio;
-        this.img = img; 
-        this.cantidad = 1;
-    }
-}
-
-const cafeMolido = new Producto(1, "Cafe Molido", 500, "img/cafe-molido-mano.jpg");
-const capuccino = new Producto(2, "Capuccino", 400, "img/capuccino.jpg");
-const cafeEspecial = new Producto(3, "Cafe Especial", 450, "img/cafe-especial.jpg");
-const chococcino = new Producto(4, "Chococcino", 6000, "img/chococcino.jpg");
-const capuccinoConGalletitas = new Producto(5, "Capuccino Con Galletitas", 650, "img/cappuccino-with-bisquits.jpg");
-const cafeEspecialConTorta = new Producto(6, "Cafe Especial Con Torta", 800, "img/cafe-especial-torta.jpg");
-const cafeConMedialunas = new Producto(7, "Cafe Con Medialunas", 650, "img/cafe-con-medialunas.jpg");
-const capuccinoConTorta = new Producto(8, "Capuccino Con Torta", 900, "img/cafe-torta.jpg");
-
-const productos = [cafeMolido, capuccino, cafeEspecial, chococcino, capuccinoConGalletitas, cafeEspecialConTorta, cafeConMedialunas, capuccinoConTorta];
-
-
+let productos = [];
 let carrito = [];
+carrito = JSON.parse(localStorage.getItem("carrito")) || [];
+const urlLocal = "productos.json"
 
-if(localStorage.getItem("carrito")){
-    carrito = JSON.parse(localStorage.getItem("carrito"));
-}
+fetch(urlLocal)
+    .then(response => response.json())
+    .then(data => {
+        productos = data;
+        mostrarProductos(data);
+    })
+    .catch(error => console.log(error))
+
 
 const contenedorProductos = document.getElementById("contenedorProductos");
 
@@ -47,6 +33,14 @@ const mostrarProductos = () => {
         const boton = document.getElementById(`boton${producto.id}`);
         boton.addEventListener("click", () => {
             agregarAlCarrito(producto.id);
+            Toastify({
+                text: "Producto agregado al carrito",
+                duration: 3000,
+                close: true,
+                gravity: "top",
+                position: "right",
+                backgroundColor: "linear-gradient(to right, #65b5bb, #41787c"
+            })
         })
     })
 }
@@ -87,8 +81,8 @@ const mostrarCarrito = () => {
                                 <p class = "precio"> $${producto.precio} </p>
                                 <div class = "div-card">
                                     <p class = "cantidad"> Cantidad: ${producto.cantidad} </p>
-                                    <button class = "btn btnCantidad"> + </button>
-                                    <button class = "btn btnCantidad"> - </button>
+                                    <button class = "btn btnCantidad" id = "aumentar"> + </button>
+                                    <button class = "btn btnCantidad" id = "dismunuir"> - </button>
                                 </div>
                                 <button class = "btnCarrito" id="eliminar${producto.id}" > Eliminar </button>
                             </div>
@@ -96,12 +90,40 @@ const mostrarCarrito = () => {
                         `
         contenedorCarrito.appendChild(card);
 
+        const eliminar = document.getElementById(`disminuir${producto.id}`);
+        eliminar.addEventListener("click", () => {
+            disminuirCantidad(producto.id);
+        })
+
+        const aumentar = document.getElementById(`aumentar${producto}`);
+        aumentar.addEventListener("click", () => {
+            aumentarCantidad(producto.id);
+        })
+
         const boton = document.getElementById(`eliminar${producto.id}`);
         boton.addEventListener("click", () => {
             eliminarDelCarrito(producto.id);
         })
     })
     calcularTotal();
+}
+
+const aumentarCantidad = (id) => {
+    const producto = carrito.find((producto) => producto.id === id);
+    producto.cantidad++;
+    localStorage.setItem("carrito",JSON.stringify(carrito));
+    mostrarCarrito();
+}
+
+const disminuirCantidad = (id) => {
+    const producto = carrito.find((producto) => producto.id === id);
+    producto.cantidad--;
+    if(producto.cantidad === 0){
+        eliminarDelCarrito(id);
+    }else{
+        localStorage.setItem("carrito",JSON.stringify(carrito));
+    }
+    mostrarCarrito();
 }
 
 const eliminarDelCarrito = (id) => {
@@ -143,16 +165,15 @@ finalizarCompra.addEventListener("click", () => {
         title: "¿Desea finalizar su compra?",
         showDenyButton: true,
         confirmButtonText: "Sí",
-        denyButtonText: "No",
+        denyButtonText: "No, seguir comprando",
     }).then((result) => {
         if (result.isConfirmed) {
         Swal.fire("Compra Realizada", '', 'success')
+        /* ok.addEventListener("click", () => {
+            eliminarTodoElCarrito();
+        }) */
         } else if (result.isDenied) {
-        Swal.fire("Compra Cancelada", '', 'info')
+        Swal.fire("Puedes seguir sumando productos al carrito", '', 'success')
         }
     })
-})
-
-finalizarCompra.addEventListener("click", () => {
-    eliminarTodoElCarrito();
 })

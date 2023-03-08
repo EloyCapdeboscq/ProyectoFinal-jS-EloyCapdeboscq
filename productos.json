@@ -1,0 +1,10 @@
+[
+    {"id":1, "nombre": "Cafe Molido", "precio": 500, "img": "img/cafe-molido-mano.jpg", "cantidad": 1},
+    {"id":2, "nombre": "Capuccino", "precio": 400, "img": "img/capuccino.jpg", "cantidad": 1},
+    {"id":3, "nombre": "Cafe Especial", "precio": 450, "img": "img/cafe-especial.jpg", "cantidad": 1},
+    {"id":4, "nombre": "Chococcino", "precio": 600, "img": "img/chococcino.jpg", "cantidad": 1},
+    {"id":5, "nombre": "Capuccino Con Galletitas", "precio": 650, "img": "img/cappuccino-with-bisquits.jpg", "cantidad": 1},
+    {"id":6, "nombre": "Cafe Especial Con Torta", "precio": 800, "img": "img/cafe-especial-torta.jpg", "cantidad": 1},
+    {"id":7, "nombre": "Cafe Con Medialunas", "precio": 650, "img": "img/cafe-con-medialunas.jpg", "cantidad": 1},
+    {"id":8, "nombre": "Capuccino Con Torta", "precio": 900, "img": "img/cafe-torta.jpg", "cantidad": 1}
+]
