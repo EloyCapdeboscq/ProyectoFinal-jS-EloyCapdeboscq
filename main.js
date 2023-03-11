@@ -14,7 +14,7 @@ fetch(urlLocal)
 
 const contenedorProductos = document.getElementById("contenedorProductos");
 
-const mostrarProductos = () => {
+const mostrarProductos = (productos) => {
     productos.forEach(producto => {
         const card = document.createElement("div");
         card.classList.add("col-xl-3", "col-md-6", "col-sm-12");
@@ -40,20 +40,18 @@ const mostrarProductos = () => {
                 gravity: "top",
                 position: "right",
                 backgroundColor: "linear-gradient(to right, #65b5bb, #41787c"
-            })
+            }).showToast();
         })
-    })
+    });
 }
-
-mostrarProductos();
 
 
 const agregarAlCarrito = (id) => {
+    const producto = productos.find(producto => producto.id === id);
     const productoEnCarrito = carrito.find(producto => producto.id === id);
     if(productoEnCarrito) {
         productoEnCarrito.cantidad++;
     } else {
-        const producto = productos.find(producto => producto.id === id);
         carrito.push(producto);
     }
     calcularTotal();
@@ -66,11 +64,11 @@ const verCarrito = document.getElementById("verCarrito");
 
 verCarrito.addEventListener("click", () => {
     mostrarCarrito();
-})
+});
 
 const mostrarCarrito = () => {
     contenedorCarrito.innerHTML = "";
-    carrito.forEach(producto => {
+    carrito.forEach((producto) => {
         const card = document.createElement("div");
         card.classList.add("col-xl-3", "col-md-6", "col-sm-12");
         card.innerHTML = `
@@ -81,8 +79,8 @@ const mostrarCarrito = () => {
                                 <p class = "precio"> $${producto.precio} </p>
                                 <div class = "div-card">
                                     <p class = "cantidad"> Cantidad: ${producto.cantidad} </p>
-                                    <button class = "btn btnCantidad" id = "aumentar"> + </button>
-                                    <button class = "btn btnCantidad" id = "dismunuir"> - </button>
+                                    <button class = "btn btnCantidad" id = "aumentar${producto.id}"> + </button>
+                                    <button class = "btn btnCantidad" id = "dismunuir${producto.id}"> - </button>
                                 </div>
                                 <button class = "btnCarrito" id="eliminar${producto.id}" > Eliminar </button>
                             </div>
@@ -95,7 +93,7 @@ const mostrarCarrito = () => {
             disminuirCantidad(producto.id);
         })
 
-        const aumentar = document.getElementById(`aumentar${producto}`);
+        const aumentar = document.getElementById(`aumentar${producto.id}`);
         aumentar.addEventListener("click", () => {
             aumentarCantidad(producto.id);
         })
@@ -127,7 +125,7 @@ const disminuirCantidad = (id) => {
 }
 
 const eliminarDelCarrito = (id) => {
-    const producto = carrito.find(producto => producto.id === id);
+    const producto = carrito.find((producto) => producto.id === id);
     const indice = carrito.indexOf(producto);
     carrito.splice(indice, 1);
     mostrarCarrito();
@@ -169,9 +167,7 @@ finalizarCompra.addEventListener("click", () => {
     }).then((result) => {
         if (result.isConfirmed) {
         Swal.fire("Compra Realizada", '', 'success')
-        /* ok.addEventListener("click", () => {
-            eliminarTodoElCarrito();
-        }) */
+        eliminarTodoElCarrito();
         } else if (result.isDenied) {
         Swal.fire("Puedes seguir sumando productos al carrito", '', 'success')
         }
