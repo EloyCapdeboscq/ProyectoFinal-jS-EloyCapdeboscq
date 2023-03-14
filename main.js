@@ -80,7 +80,7 @@ const mostrarCarrito = () => {
                                 <div class = "div-card">
                                     <p class = "cantidad"> Cantidad: ${producto.cantidad} </p>
                                     <button class = "btn btnCantidad" id = "aumentar${producto.id}"> + </button>
-                                    <button class = "btn btnCantidad" id = "dismunuir${producto.id}"> - </button>
+                                    <button class = "btn btnCantidad" id = "disminuir${producto.id}"> - </button>
                                 </div>
                                 <button class = "btnCarrito" id="eliminar${producto.id}" > Eliminar </button>
                             </div>
@@ -88,23 +88,25 @@ const mostrarCarrito = () => {
                         `
         contenedorCarrito.appendChild(card);
 
-        const eliminar = document.getElementById(`disminuir${producto.id}`);
-        eliminar.addEventListener("click", () => {
-            disminuirCantidad(producto.id);
-        })
 
         const aumentar = document.getElementById(`aumentar${producto.id}`);
         aumentar.addEventListener("click", () => {
             aumentarCantidad(producto.id);
         })
 
-        const boton = document.getElementById(`eliminar${producto.id}`);
-        boton.addEventListener("click", () => {
+        const disminuir = document.getElementById(`disminuir${producto.id}`);
+        disminuir.addEventListener("click", () => {
+            disminuirCantidad(producto.id);
+        })
+
+        const eliminar = document.getElementById(`eliminar${producto.id}`);
+        eliminar.addEventListener("click", () => {
             eliminarDelCarrito(producto.id);
         })
     })
     calcularTotal();
 }
+
 
 const aumentarCantidad = (id) => {
     const producto = carrito.find((producto) => producto.id === id);
